@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block body %}
+  <!--
+  {% if session.logged_in %}
+    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+      <dl>
+        <dt>Title:
+        <dd><input type=text size=30 name=title>
+        <dt>Text:
+        <dd><textarea name=text rows=5 cols=40></textarea>
+        <dd><input type=submit value=Share>
+      </dl>
+    </form>
+  {% endif %} <!-->
+  {% for entry in entries %}
+
+     <div class="blog-post">
+            <h2 class="blog-post-title">{{ entry.name }}</h2>
+            <p class="blog-post-meta">{{ entry.created_at }} by <a href="#">{{ entry.user_name }}</a></p>
+            <p>{{ entry.summary|safe }}</p>
+
+
+     </div>
+
+  {% else %}
+    <div class="blog-post">
+            <h2 class="blog-post-title">Opps!</h2>
+
+            <p>No articles so far</p>
+
+     </div>
+  {% endfor %}
+  <!-- /.blog-post -->
+
+     <!--ul class="pager">
+       <li><a href="#">Previous</a></li>
+       <li><a href="#">Next</a></li>
+     </ul-->
+
+{% endblock %}
