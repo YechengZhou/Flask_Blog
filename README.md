@@ -1,4 +1,4 @@
-Flask_BLog
+Flask_Blog
 ==========
 
 Blog build by Flask
