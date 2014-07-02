@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block beforehead %}
+
+    <script>
+    var
+        action = '{{ action }}',
+        redirect = '{{ redirect }}';
+
+    var vm;
+
+    $(function () {
+        vm = new Vue({
+            el: '#form-blog',
+            data: {
+                name: '',
+                summary: '',
+                content: ''
+            },
+            methods: {
+                submit: function (event) {
+                    event.preventDefault();
+                    postApi(action, this.$data, function (err, r) {
+                        if (err) {
+                            alert(err);
+                        }
+                        else {
+                            alert('Saved successfully!');
+                            return location.assign(redirect);
+                        }
+                    });
+                }
+            }
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block title %}
+        <div class="blog-header">
+        <h1 class="blog-title">New Blog</h1>
+      </div>
+{% endblock %}
+
+{% block body %}
+  <!--
+  {% if session.logged_in %}
+    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+      <dl>
+        <dt>Title:
+        <dd><input type=text size=30 name=title>
+        <dt>Text:
+        <dd><textarea name=text rows=5 cols=40></textarea>
+        <dd><input type=submit value=Share>
+      </dl>
+    </form>
+  {% endif %} <!-->
+
+
+  <div class="uk-width-1-1">
+    <form id="form-blog" v-on="submit: submit" role="form">
+        <div class="form-group">
+            <label for="articletitle">Title</label>
+            <input v-model="name" class="form-control">
+
+        </div>
+        <div class="form-group">
+            <label for="articlesummary">Summary</label>
+            <textarea v-model="summary" class="form-control" rows=4></textarea>
+
+        </div>
+        <div class="form-group">
+            <label for="articlecontent">Content</label>
+            <textarea v-model="content" class="form-control" rows=10></textarea>
+        </div>
+        <div class="form-group" >
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
+        </div>
+    </form>
+  </div>
+  <!-- /.blog-post -->
+
+     <!--ul class="pager">
+       <li><a href="#">Previous</a></li>
+       <li><a href="#">Next</a></li>
+     </ul-->
+
+{% endblock %}

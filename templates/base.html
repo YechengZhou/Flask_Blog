@@ -25,12 +25,14 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="http://v3.bootcss.com/assets/js/ie10-viewport-bug-workaround.js"></script>
 
+    <script src="{{ url_for('static', filename='js/vue.min.js') }}"></script>
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    {% block beforehead %}
+    {% block beforehead %} {% endblock %}
   </head>
 
   <body>
@@ -39,8 +41,8 @@
       <div class="container">
         <nav class="blog-nav">
           <a class="blog-nav-item active" href="#">Blog</a>
-          <a class="blog-nav-item" href="#">Projects</a>
-          <a class="blog-nav-item" href="#">About Me</a>
+          <a class="blog-nav-item" href="/projects/">Projects</a>
+          <a class="blog-nav-item" href="/about/">About Me</a>
 
         </nav>
       </div>
@@ -77,11 +79,12 @@
           </div>
 
           <div class="sidebar-module">
-            <h4>Elsewhere</h4>
+            <h4>Social</h4>
             <ol class="list-unstyled">
               <li><a href="#">GitHub</a></li>
               <li><a href="#">Weibo</a></li>
-              <li><a href="#">RenRen</a></li>
+              <li><a href="#">Linkedin</a></li>
+
             </ol>
           </div>
         </div><!-- /.blog-sidebar -->

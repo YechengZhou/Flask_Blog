@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}
         <div class="blog-header">
-        <h1 class="blog-title">All Blog</h1>
-        <p class="lead blog-description">Record my stuffs</p>
+        <h1 class="blog-title">Projects</h1>
+        <p class="lead blog-description">my projects on GitHub</p>
       </div>
 {% endblock %}
 
@@ -19,23 +19,16 @@
       </dl>
     </form>
   {% endif %} <!-->
-  {% for entry in entries %}
+  {% for project in projects %}
 
-     <div class="blog-post">
-            <h2 class="blog-post-title">{{ entry.name }}</h2>
-            <p class="blog-post-meta">{{ entry.created_at }} by <a href="#">{{ entry.user_name }}</a></p>
-            <p>{{ entry.summary|safe }}</p>
+     <div class="jumbotron">
+        <h3>{{ project.name }}</h3>
+        <p>{{ project.description }}</p>
+        <p>
+          <a class="btn btn-lg btn-primary" href={{ project.html_url }} role="button">View on Github &raquo;</a>
+        </p>
+    </div>
 
-
-     </div>
-
-  {% else %}
-    <div class="blog-post">
-            <h2 class="blog-post-title">Opps!</h2>
-
-            <p>No articles so far</p>
-
-     </div>
   {% endfor %}
   <!-- /.blog-post -->
 

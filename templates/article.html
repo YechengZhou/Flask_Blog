@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}
-        <div class="blog-header">
-        <h1 class="blog-title">All Blog</h1>
-        <p class="lead blog-description">Record my stuffs</p>
+      <div class="blog-header">
+        <h1 class="blog-title">{{ entry.name }}</h1>
+        <p class="blog-post-meta">{{ entry.created_at }} by <a href="#">{{ entry.user_name }}</a></p>
       </div>
 {% endblock %}
 
@@ -19,24 +19,21 @@
       </dl>
     </form>
   {% endif %} <!-->
-  {% for entry in entries %}
-
+    {% if entry %}
      <div class="blog-post">
-            <h2 class="blog-post-title">{{ entry.name }}</h2>
-            <p class="blog-post-meta">{{ entry.created_at }} by <a href="#">{{ entry.user_name }}</a></p>
-            <p>{{ entry.summary|safe }}</p>
+            <p>{{ entry.content|safe }}</p>
 
 
      </div>
+    {% else %}
 
-  {% else %}
     <div class="blog-post">
             <h2 class="blog-post-title">Opps!</h2>
 
-            <p>No articles so far</p>
+            <p>Can not find the article</p>
 
      </div>
-  {% endfor %}
+    {% endif %}
   <!-- /.blog-post -->
 
      <!--ul class="pager">
