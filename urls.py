@@ -25,6 +25,9 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 print app.config
 
+for i in app.config.items():
+    logging.info('%s : %s' % (i[0], i[1]))
+
 '''
 url design:
 /blog/: display all articles with brief introduction
@@ -121,8 +124,10 @@ def create_blog():
     """
     create blog and add  to DB
     """
-    return render_template('create_blog.html',)
+    return render_template('create_blog.html', action='/api/addblog/')
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
+    from www import RESTAPI
+    RESTAPI.add_res(app)
     app.run(port=9999)
