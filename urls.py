@@ -43,15 +43,30 @@ url design:
 
 @app.route('/')
 def index():
-    if 'username' in session:
-        return 'Logged in as %s' % escape(session['username'])
+    if session['login']:
+        logging.info('Logged in as %s' % escape(session['username']))
+        return redirect('//blog/')
     return redirect('/login/')
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
+        if session['login']:
+            return redirect('/index/')
         return render_template('login.html')
 
+    elif request.method == 'POST':
+        email = request.form['email'].strip().lower()
+        password = request['password']
+        user = db.select_first_one('select * from user where email=?', email)
+        if user is None:
+            #raise APIError('auth:failed', 'email', 'email invalid')
+            print 'user do not exits'
+        elif user.password != password:
+            #raise APIError('auth:failed', 'password', 'Invalid password.')
+            print 'password incorrect'
+        session['login'] = True
+        return redirect('/index/')
 
 @app.route('/logout')
 def logout():

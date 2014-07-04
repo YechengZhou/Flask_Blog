@@ -6,7 +6,7 @@ __author__ = 'yechengzhou'
 JSON API definition
 """
 
-from flask import Flask, request
+from flask import request
 from flask.ext.restful import Resource, Api
 from db import db
 import logging
@@ -93,20 +93,6 @@ class AddBlog(Resource):
             content = request.form['content'],
         )
         blog.insert()
-
-
-class Authentic(Resource):
-    """
-    check if user name is ok
-    """
-    def post(self):
-        email = request.form['email'].strip().lower()
-        password = request['password']
-        user = db.select_first_one('select * from user where email=?', email)
-        if user is None:
-            raise APIError('auth:failed', 'email', 'email invalid')
-        elif user.password != password:
-            raise APIError('auth:failed', 'password', 'Invalid password.')
 
 
 def add_res(app):
