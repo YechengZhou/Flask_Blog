@@ -40,3 +40,12 @@ class Comment(Model):
     user_image = StringField(ddl='varchar(500)')
     content = TextField()
     created_at = FloatField(updatable=False, default=time.time)
+
+
+class Projects(Model):
+    __table__ = 'projects'
+    id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
+    name = StringField(ddl='varchar(50)')
+    url = StringField(ddl='varchar(50)')
+    description = TextField()
+    created_at = FloatField(updatable=False, default=time.time)

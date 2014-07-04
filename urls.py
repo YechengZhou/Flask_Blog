@@ -8,6 +8,7 @@ from db import db
 import urllib2
 import logging
 import json
+from www.models import Projects
 
 if db.engine:
     logging.info("db engine already exits")
@@ -48,15 +49,9 @@ def index():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        #session['username'] = request.form['username']
-        return redirect(url_for('index'))
-    return '''
-        <form action="" method="post">
-            <p><input type=text name=username>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+    if request.method == 'GET':
+        return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
@@ -94,6 +89,9 @@ def show_projects():
     call github api to get all repositories
     """
     url = 'https://api.github.com/users/YechengZhou/repos'
+    last_update_time = db.select_first_one('select created_at from projects')
+    print last_update_time
+    # 12 hours is update interval
     all_rep = git_api_query(url)
     all_repositories_info = []
     if isinstance(all_rep, list):
@@ -106,6 +104,14 @@ def show_projects():
                 this_rep['html_url'] = i_result['html_url']
                 this_rep['description'] = i_result['description']
                 all_repositories_info.append(this_rep)
+    # insert query information into db
+    for p in all_repositories_info:
+        this_project = Projects(
+            name = p['name'],
+            url = p['html_url'],
+            description = p['description']
+        )
+        this_project.insert()
     return render_template('projects.html', projects=all_repositories_info)
 
 

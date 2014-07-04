@@ -25,6 +25,38 @@ else:
     db.create_engine(user='root', password='ZYC06091126!', database='yecheng')
 
 
+class APIError(StandardError):
+    def __init__(self, error, data='', message=''):
+        super(APIError,self).__init__(message)
+        self.error = error
+        self.data = data
+        self.message = message
+
+
+class APIValueError(APIError):
+    '''
+    Indicate the input value has error or invalid. The data specifies the error field of input form.
+    '''
+    def __init__(self, field, message=''):
+        super(APIValueError, self).__init__('value:invalid', field, message)
+
+
+class APIResourceNotFoundError(APIError):
+    '''
+    Indicate the resource was not found. The data specifies the resource name.
+    '''
+    def __init__(self, field, message=''):
+        super(APIResourceNotFoundError, self).__init__('value:notfound', field, message)
+
+
+class APIPermissionError(APIError):
+    '''
+    Indicate the api has no permission.
+    '''
+    def __init__(self, message=''):
+        super(APIPermissionError, self).__init__('permission:forbidden', 'permission', message)
+
+
 class SingleBlog(Resource):
     """
     get 1 blog information by id
@@ -51,9 +83,9 @@ class AddBlog(Resource):
     add new blog
     """
     def post(self):
-        print request.form
+        #print request.form
         blog = Blog(
-            user_id = '00140408322081006c255e61b634c5a8937be2afc6119f7000',
+            user_id = '00140408322081006c255e61b634c5a8937be2afc6119f7000',  # TODO
             user_name = 'Test',
             user_image = 'about:blank',
             name = request.form['name'],
@@ -61,6 +93,20 @@ class AddBlog(Resource):
             content = request.form['content'],
         )
         blog.insert()
+
+
+class Authentic(Resource):
+    """
+    check if user name is ok
+    """
+    def post(self):
+        email = request.form['email'].strip().lower()
+        password = request['password']
+        user = db.select_first_one('select * from user where email=?', email)
+        if user is None:
+            raise APIError('auth:failed', 'email', 'email invalid')
+        elif user.password != password:
+            raise APIError('auth:failed', 'password', 'Invalid password.')
 
 
 def add_res(app):
