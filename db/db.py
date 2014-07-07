@@ -335,6 +335,7 @@ def execute(sql):
 def _update(sql, *args):
     """
     n = db.update('insert into user(id, name) values(?, ?)', 4, 'Jack')
+    update('create table user (id int primary key, name text, email text, passwd text, last_modified real)')
     @param sql:
     @param args:
     @return: affected rows
