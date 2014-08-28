@@ -16,7 +16,7 @@
     <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='css/blog.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/blog.css') }}?123" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="http://v3.bootcss.com/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -41,11 +41,24 @@
     <div class="blog-masthead">
       <div class="container">
         <nav class="blog-nav">
-          <a class="blog-nav-item active" href="/blog/">Blog</a>
-          <a class="blog-nav-item" href="/projects/">Projects</a>
-          <a class="blog-nav-item" href="/about/">About Me</a>
-          <a class="blog-user-item" href="/xxx/">Test</a>
-          <a class="blog-logout=item" href="/logout/">Logout</a>
+           {% if entry or entries %}
+            <a class="blog-nav-item active" href="/blog/">Blog</a>
+           {% else %}
+            <a class="blog-nav-item" href="/blog/">Blog</a>
+           {% endif %}
+           {% if projects %}
+                <a class="blog-nav-item active" href="/projects/">Projects</a>
+           {% else %}
+                <a class="blog-nav-item" href="/projects/">Projects</a>
+           {% endif %}
+
+            <a class="blog-nav-item" href="/about/">About Me</a>
+           {% if username %}
+            <a class="blog-logout-item" href="/logout/">Logout</a>
+            <a class="blog-user-item" href="/{{ username }}/">{{ username }}</a>
+           {% else %}
+            <a class="blog-login-item" href="/logout/">Sign in</a>
+           {% endif %}
         </nav>
       </div>
     </div>
@@ -75,18 +88,26 @@
         </div><!-- /.blog-main -->
 
         <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
-          <div class="sidebar-module sidebar-module-inset">
-            <h4>About</h4>
-            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-          </div>
+          <div class="sidebar-module">
+
+
+              <div style="text-align:center; margin-left:auto; margin-right:auto;">
+                  <img class="img-circle" src="https://raw.githubusercontent.com/YechengZhou/Flask_Blog/master/static/avatar.jpg" alt="Generic placeholder image" style="width: 140px; height: 140px; margin-top:20px; margin-bottom:20px; margin-right:auto; margin-left:auto;">
+                  <h2>Yecheng Zhou</h2>
+                  <p>This is my tiny website to record some of mine</p>
+                  <p><a class="btn btn-default" href="/about/" >View details &raquo;</a></p>
+              </div>
+
+           </div>
 
           <div class="sidebar-module">
-            <h4>Social</h4>
-            <ol class="list-unstyled">
-              <li><a href="#">GitHub</a></li>
-              <li><a href="#">Weibo</a></li>
-              <li><a href="#">Linkedin</a></li>
 
+            <ol class="list-unstyled" style="text-align:center; margin-left:auto; margin-right:auto;">
+              <h4>Social</h4>
+              <li><a href="https://github.com/YechengZhou">GitHub</a></li>
+              <li><a href="http://www.weibo.com/yecheng1126">Weibo</a></li>
+              <li><a href="http://instagram.com/zycethan">Instagram</a></li>
+              <li><a href="http://cn.linkedin.com/pub/yecheng-zhou/65/b60/455">Linkedin</a></li>
             </ol>
           </div>
         </div><!-- /.blog-sidebar -->
@@ -107,6 +128,6 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script-->
   </body>
 </html>

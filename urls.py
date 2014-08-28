@@ -82,13 +82,30 @@ def login():
         return redirect('/')
 
 
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     # 如果会话中有用户名就删除它。
     session.pop('username', None)
     session['login'] = False
     return redirect(url_for('index'))
 
+
+@app.route('/register/')
+def register():
+    return render_template('register.html', redirect="/login/", action='/api/register/')
+
+glob_username = None
+
+
+def checklogin(func):
+    def wrapper(*args, ** kwargs):
+        if session.has_key('username'):
+            glob_username = session['username']
+            logging.info("User glob_username logged in")
+        else:
+            glob_username = None
+        return func(*args, ** kwargs)
+    return wrapper
 
 #####################################################
 
@@ -101,31 +118,37 @@ def home():
 
 @app.route('/blog/')
 def show_all_blog():
-    entries = db.select('select * from blogs')
+    entries = db.select('select * from blogs order by created_at DESC')
     for i in entries:
         i['created_at'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i['created_at']))
-    return render_template('blog.html', entries=entries)
+    if session.has_key('username'):
+        return render_template('blog.html', entries=entries, username=session['username'])
+    else:
+        return render_template('blog.html', entries=entries)
 
 
 @app.route('/blog/<string:id>')
 def show_article(id):
     this_entry = db.select("select * from blogs where id='%s'" % id)[0]
     this_entry['created_at'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(this_entry['created_at']))
-    return render_template('article.html', entry=this_entry)
+    if session.has_key('username'):
+        return render_template('article.html', entry=this_entry, username=session['username'])
+    else:
+        return render_template('article.html', entry=this_entry)
 
 
+#@checklogin
 @app.route('/projects/')
 def show_projects():
     """
     call github api to get all repositories
     """
+    #global glob_username
     url = 'https://api.github.com/users/YechengZhou/repos'
     last_update_time = db.select('select created_at from projects limit 0,1;')
     all_repositories_info = []
     print last_update_time
-    #if int(time.time()) - int(last_update_time[0].created_at) < 3600 * 12:  # do not update within 12 hours
-    if False:
-        # get info from db
+    if int(time.time()) - int(last_update_time[0].created_at) < 3600 * 12:  # do not update within 12 hours
         all_repositories_info = db.select('select * from projects')
     else:
         all_rep = git_api_query(url)
@@ -143,8 +166,8 @@ def show_projects():
         all_repo_name_db = db.select('select name from projects;')
 
         for p in all_repositories_info:
-            if db.MyDict(('name',),(p.name,)) in all_repo_name_db:  # just update
-                db.update("update projects set url=?, description=?, created_at=? where name=?", p['html_url'], p['description'], time.time())
+            if db.MyDict(('name',), (p.name,)) in all_repo_name_db:  # just update
+                db.update("update projects set url=?, description=?, created_at=? where name=?", p['html_url'], p['description'], time.time(), p.name)
             else:
                 this_project = Projects(
                     name=p['name'],
@@ -152,7 +175,15 @@ def show_projects():
                     description=p['description']
                 )
                 this_project.insert()
-    return render_template('projects.html', projects=all_repositories_info)
+
+    if session.has_key('username'):
+        #dir(all_repositories_info[0])
+        return render_template('projects.html', projects=all_repositories_info, username=session['username'])
+    else:
+        return render_template('projects.html', projects=all_repositories_info)
+
+    #print glob_username
+    #return render_template('projects.html', projects=all_repositories_info, username=glob_username)
 
 
 def git_api_query(url):
@@ -172,8 +203,17 @@ def create_blog():
     """
     create blog and add  to DB
     """
-    return render_template('create_blog.html', action='/api/addblog/')
+    if session.has_key('username'):
+        return render_template('create_blog.html', action='/api/addblog/', redirect='/blog/', username=session['username'])
+    else:
+        return render_template('create_blog.html', action='/api/addblog/', redirect='/blog/')
 
+@app.route('/about/')
+def about():
+    if session.has_key('username'):
+        return render_template('about.html', username=session['username'])
+    else:
+        return render_template('about.html')
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}
-        <div class="blog-header">
-        <h1 class="blog-title">All Blog</h1>
-        <p class="lead blog-description">Record my stuffs</p>
+       <div class="blog-header">
+        <h1 class="blog-title"></h1>
+        <!--p class="lead blog-description">Record my stuffs</p-->
       </div>
 {% endblock %}
 
@@ -22,8 +22,8 @@
   {% for entry in entries %}
 
      <div class="blog-post">
-            <h2 class="blog-post-title">{{ entry.name }}</h2>
-            <p class="blog-post-meta">{{ entry.created_at }} by <a href="#">{{ entry.user_name }}</a></p>
+            <h3 class="blog-post-title">{{ entry.name }}</h3>
+            <p class="blog-post-meta">posted at: {{ entry.created_at }}<!--a href="#">{{ entry.user_name }}</a--></p>
             <p>{{ entry.summary|safe }}</p>
             <a class="btn btn-default" href="/blog/{{ entry.id }}" role="button">more »</a>
      </div>
@@ -36,11 +36,6 @@
 
      </div>
   {% endfor %}
-  <!-- /.blog-post -->
 
-     <!--ul class="pager">
-       <li><a href="#">Previous</a></li>
-       <li><a href="#">Next</a></li>
-     </ul-->
 
 {% endblock %}

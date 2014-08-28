@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--link rel="icon" href="{{ url_for('static', filename='favicon.ico')}}"-->
+    <link rel="icon" href="https://raw.githubusercontent.com/YechengZhou/Flask_Blog/master/static/favicon.ico">
+
+    <title>Yecheng's Blog</title>
+
+    <!-- Bootstrap core CSS -->
+    <!--link href="/static/css/bootstrap.min.css" rel="stylesheet"-->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/register.css') }}?8897" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="http://v3.bootcss.com/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="http://v3.bootcss.com/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="http://v3.bootcss.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery-1.11.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/self_define.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vue.min.js') }}"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+        <script>
+        var
+            action = '{{ action }}',
+            redirect = '{{ redirect }}';
+
+        var vm;
+
+        $(function () {
+            vm = new Vue({
+                el: '#form-register',
+                data: {
+                    email: '',
+                    password: '',
+                    confirm: '',
+                    username: ''
+                },
+                methods: {
+                    submit: function (event) {
+                        event.preventDefault();
+                        if (vm.password != vm.confirm)
+                        {
+                            alert("2 password do not match!")
+                        }
+                        else{
+                            postApi(action, this.$data, function (err, r) {
+                                if (err) {
+                                    //return location.assign(redirect);
+                                    alert(redirect);
+                                }
+                                else {
+                                    alert('Saved successfully!');
+                                    return location.assign(redirect);
+                                }
+                            });
+                        }
+
+                    }
+                }
+            });
+        });
+        </script>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <form id='form-register' class="form-register" role="form" method="POST" v-on="submit: submit">
+        <h2 class="form-register-heading">Register</h2>
+         <label >
+            UserName<input v-model="username" name='username' type="username" class="form-control" placeholder="Username" required autofocus>
+        </label>
+        <label >
+            Email<input v-model="email" name='email' type="email" class="form-control" placeholder="Email address" required>
+        </label>
+        <label>
+            Password<input v-model='password' name='password' type="password" class="form-control" placeholder="Password" required>
+        </label>
+        <label>
+            ConfirmPassword<input v-model='confirm' name='confirm' type="password" class="form-control" placeholder="Password" required>
+        </label>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+      </form>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
+</html>
