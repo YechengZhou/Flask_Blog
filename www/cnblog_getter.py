@@ -221,7 +221,7 @@ if __name__ == "__main__":
             user_name='Test',
             user_image='about:blank',
             name=k,
-            summary=re.sub(r"<.*?>","",xx.blog_contents[k])[0:50],
+            summary=re.sub(r"<.*?>","",xx.blog_contents[k])[0:100],
             content=xx.blog_contents[k],
             created_at=xx.blog_post_time[k],
             )
