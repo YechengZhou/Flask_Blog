@@ -37,7 +37,8 @@ class Comment(Model):
     blog_id = StringField(updatable=False, ddl='varchar(50)')
     user_id = StringField(updatable=False, ddl='varchar(50)')
     user_name = StringField(ddl='varchar(50)')
-    user_image = StringField(ddl='varchar(500)')
+    user_email = StringField(ddl='varchar(500)')
+    user_url = StringField(ddl='varchar(50)')
     content = TextField()
     created_at = FloatField(updatable=False, default=time.time)
 

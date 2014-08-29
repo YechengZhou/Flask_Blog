@@ -185,3 +185,20 @@ $(function() {
         $('li[data-url=blogs]').addClass('uk-active');
     }
 });
+
+
+function replyComment(a) {
+        var p = $(a);
+        while (! p.hasClass('comment_single_block')) {
+            if (p.get(0)===document) {
+                return;
+            }
+            p = p.parent();
+        }
+        var u = '@' + p.find('.comment-username').text();
+        var $textarea = $('form').find('textarea[name=comment]');
+        $textarea.val(u + '\n' + $textarea.val());
+        $('html, body').animate({scrollTop: $('form').position().top - 20});
+        $textarea.focus();
+        $textarea.get(0).setSelectionRange(u.length + 1, u.length + 1);
+}

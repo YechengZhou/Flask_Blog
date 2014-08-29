@@ -10,6 +10,7 @@ from flask import request
 from flask.ext.restful import Resource, Api
 from db import db
 import logging
+import uuid
 from www.models import User, Blog, Comment
 
 """
@@ -100,6 +101,51 @@ class AddBlog(Resource):
         blog.insert()
 
 
+class AddComments(Resource):  # todo
+    """
+    add comments to blog
+    """
+    def post(self):
+        #print "add comments called"
+        #print request.form
+        user_url = ""
+        if not (request.form['url'].__contains__("http://") or request.form['url'].__contains__("https://")):
+            user_url = "http://" + request.form['url']
+        else:
+            user_url = request.form['url']
+
+        this_content = request.form["content"].strip()
+        temp_dict = {}
+        for i in (" ", "\t", "\n"):
+            find_result_tmp = this_content.find(i)
+            if find_result_tmp != -1:
+                temp_dict[i] = find_result_tmp
+         # 按value 排序
+        first_space,x = sorted(temp_dict.items(), key=lambda temp_dict:temp_dict[1])[0]
+        print first_space
+        print "this_content", this_content
+        #if len(this_content) != 0:
+        try:
+            if this_content[0] == "@":
+                # get the author he want to reply
+                reply_author = this_content[1:first_space]
+            else:
+                reply_author = this_content[1:]
+                print "reply: ",reply_author
+        except:
+            pass
+
+        comment = Comment(
+            blog_id=request.form['blog_id'],
+            user_id=(str(uuid.uuid4()).replace("-","")*2)[:50], # 随机生成一个userid， 不提供用户注册功能了，没意义
+            user_name=request.form['author'],
+            user_email=request.form['email'],
+            user_url=user_url,
+            content=request.form["content"],
+        )
+        comment.insert()
+
+
 class Register(Resource):
     """
     register user
@@ -124,6 +170,7 @@ def add_res(app):
     api.add_resource(SingleBlog, '/api/blog/<string:blog_id>')
     api.add_resource(AllBlog, '/api/allblog/')
     api.add_resource(AddBlog, '/api/addblog/')
+    api.add_resource(AddComments, '/api/addcomment/')
     #api.add_resource(Register, '/api/register/')
 
 if __name__ == '__main__':

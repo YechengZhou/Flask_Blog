@@ -114,10 +114,11 @@ h6, .h6 {
   padding-top: 20px;
   padding-bottom: 20px;
 }
+
 .blog-title {
   margin-top: 30px;
-  margin-bottom: 0;
-  font-size: 60px;
+  margin-bottom: 5px;
+  font-size: 40px;
   font-weight: normal;
 }
 .blog-description {
@@ -175,7 +176,7 @@ h6, .h6 {
 }
 .blog-post-title {
   margin-bottom: 5px;
-  font-size: 40px;
+  font-size: 30px;
 }
 .blog-post-meta {
   margin-bottom: 20px;
@@ -207,4 +208,20 @@ padding: 5px;
 overflow: auto;
 margin: 5px 0;
 color: #000;
+}
+
+.comment-prompt .comment-content{
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.comment-username{
+  font-size: 18px;
+  color:#428bca;
+
+}
+
+comment-date{
+  color:#987cb9;
+  float:right;
 }

@@ -131,10 +131,15 @@ def show_all_blog():
 def show_article(id):
     this_entry = db.select("select * from blogs where id='%s'" % id)[0]
     this_entry['created_at'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(this_entry['created_at']))
+    this_comments = db.select("select * from comments where blog_id ='%s'" % id)
+    if this_comments:
+        for i in this_comments:
+            i.created_at = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i.created_at))
+
     if session.has_key('username'):
-        return render_template('article.html', entry=this_entry, username=session['username'])
+        return render_template('article.html', entry=this_entry, username=session['username'], comments=this_comments)
     else:
-        return render_template('article.html', entry=this_entry)
+        return render_template('article.html', entry=this_entry, comments=this_comments)
 
 
 #@checklogin

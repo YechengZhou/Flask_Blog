@@ -16,7 +16,7 @@
     <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='css/blog.css') }}?123" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/blog.css') }}?1231sasd" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="http://v3.bootcss.com/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -25,7 +25,7 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="http://v3.bootcss.com/assets/js/ie10-viewport-bug-workaround.js"></script>
     <script src="{{ url_for('static', filename='js/jquery-1.11.1.js') }}"></script>
-      <script src="{{ url_for('static', filename='js/self_define.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/self_define.js') }}?aasasagda3"></script>
     <script src="{{ url_for('static', filename='js/vue.min.js') }}"></script>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -42,9 +42,9 @@
       <div class="container">
         <nav class="blog-nav">
            {% if entry or entries %}
-            <a class="blog-nav-item active" href="/blog/">Blog</a>
+            <a class="blog-nav-item active" href="/blog/">Blogs</a>
            {% else %}
-            <a class="blog-nav-item" href="/blog/">Blog</a>
+            <a class="blog-nav-item" href="/blog/">Blogs</a>
            {% endif %}
            {% if projects %}
                 <a class="blog-nav-item active" href="/projects/">Projects</a>
@@ -53,12 +53,14 @@
            {% endif %}
 
             <a class="blog-nav-item" href="/about/">About Me</a>
+
+           <!--
            {% if username %}
             <a class="blog-logout-item" href="/logout/">Logout</a>
             <a class="blog-user-item" href="/{{ username }}/">{{ username }}</a>
            {% else %}
             <a class="blog-login-item" href="/logout/">Sign in</a>
-           {% endif %}
+           {% endif %} -->
         </nav>
       </div>
     </div>
@@ -118,10 +120,16 @@
 
 
     <div class="blog-footer">
-      <p>Yecheng' blog<a href="http://getbootstrap.com">YechengZhou</a>
+      <p>Designed and Developed by: <a href="/about/">YechengZhou</a>
+      <p>Powered by :
+      <a href="http://getbootstrap.com">Bootstrap</a>
+      <a href="http://vuejs.org/">Vue.js</a>
+      <a href="http://flask.pocoo.org/">Flask</a> </p>
       <p>
         <a href="#">Back to top</a>
       </p>
+
+      <p>© 2014 Yecheng Zhou — Alights Reserved.</p>
     </div>
 
 

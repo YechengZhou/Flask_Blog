@@ -1,8 +1,61 @@
 {% extends "base.html" %}
+
+{% block beforehead %}
+
+    <script>
+    var
+        action = '/api/addcomment/',
+        redirect = '/blog/{{entry.id}}';
+
+    var vm;
+
+    $(function () {
+        vm = new Vue({
+            el: '#form-comment',
+            data: {
+                author: '',
+                email: '',
+                url: '',
+                content: '',
+
+            },
+            methods: {
+                submit: function (event) {
+                    event.preventDefault();
+                    if ( $('.comment_area').val() == "")
+                    {
+                        alert("Your comment is empty!");
+                        return ;
+                    }
+                    if ( $('.text_author').val() == "" || $('.text_email').val() == "")
+                    {
+                        alert("Author and Email are required!");
+                        return ;
+                    }
+                    postApi(action, this.$data, function (err, r) {
+                        if (err) {
+                            alert('Somethings wrong T.T Please contact ethanchou1126@gmail.com');
+                        }
+                        else {
+                            alert('Thanks for your comment!');
+                            return location.assign(redirect);
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+
+
+    </script>
+
+{% endblock %}
+
 {% block title %}
       <div class="blog-header">
         <h3 class="blog-title">{{ entry.name }}</h3>
-        <p class="blog-post-meta">{{ entry.created_at }} by <a href="#">{{ entry.user_name }}</a></p>
+        <p class="blog-post-meta">posted at: {{ entry.created_at }} </p>
       </div>
 {% endblock %}
 
@@ -44,5 +97,76 @@
        <li><a href="#">Previous</a></li>
        <li><a href="#">Next</a></li>
      </ul-->
+    {% if comments %}
+    <div class="comment-main">
+        <h3 id="reply_title"><strong>Comments</strong></h3>
+        {% for comment in comments %}
+        <div class="comment_single_block">
+            <div class="comment-prompt">
+                <span class="comment-username"><a href="{{comment.user_url}}">{{comment.user_name}}</a></span> posted at
+                <span class="comment-date">{{comment.created_at}}</span>：
+            </div>
+            <div class="comment-content">
+                {{comment.content}}
+            </div>
+            <div class="comment-prompt">
+                <span style="text-decoration:underline">
+                    <a href="#0" onclick="replyComment(this)" name="reply">reply</a>
+                </span>
+            </div>
+
+            <HR style="FILTER: alpha(opacity=100,finishopacity=0,style=2)" width="95%" color=#987cb9 SIZE=15>
+         </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+    <div class="reply_area">
+        <h3 id="reply_title"><strong>Leave a Reply</strong></h3>
+        <div>
+            <form id="form-comment" v-on="submit: submit" class="form" >
+                <p><input v-model="author" class="text_author" name="author" type="text" value="" size="25" tabindex="1">&nbsp;&nbsp;<label for="author"><strong>Author</strong> (required)</label></p>
+                <p><input v-model="email" class="text_email" name="email" type="text" value="" size="25" tabindex="2">&nbsp;&nbsp;<label for="email"><strong>Email</strong> (will not be published)(required)</label></p>
+                <p><input v-model="url" class="text_url" name="url" type="text" value="" size="25" tabindex="3">&nbsp;&nbsp;<label for="url">Website</label></p>
+                <p>
+                    <textarea v-model="content" name="comment" rows="10" cols="60" tabindex="4" class="comment_area"></textarea>
+                </p>
+                <p class="form-submit">
+                <input v-model="blog_id" type="hidden" name="blog_id" value="{{entry.id}}" >
+                <input type="hidden" name="comment_post_ID" value="1376" id="comment_post_ID">
+                <input type="hidden" name="comment_parent" id="comment_parent" value="0">
+                <input name="submit" type="submit" id="submit" value="Post Comment">
+                </p>
+
+            </form>
+
+        </div>
+    </div>
+    <!--div >
+        <form id="form-comment" v-on="submit: submit" role="form">
+            <p>
+                <input v-model="author" size="25"><label >Author(required)</label>
+
+            </p>
+            <p>
+
+                <input v-model="email" size="25"><label >Email(required, will not be published)</label>
+            </p>
+            <p>
+
+                <input v-model="url" size="25"><label >Website</label>
+            </p>
+            <p>
+                <textarea v-model="content" class="form-control" rows=5></textarea>
+            </p>
+
+            <input name="submit" type="submit" id="submit" value="Post Comment">
+
+            <input type="hidden" name="blog_id" value="{{entry.id}}" id="comment_post_ID">
+        </form>
+    </div>
+    <div>
+    </div-->
 
 {% endblock %}
