@@ -16,7 +16,7 @@
                 author: '',
                 email: '',
                 url: '',
-                content: '',
+                //content: '',
 
             },
             methods: {
@@ -26,6 +26,9 @@
                     {
                         alert("Your comment is empty!");
                         return ;
+                    }
+                    else{
+                        vm.$data['content'] = $('.comment_area').val()
                     }
                     if ( $('.text_author').val() == "" || $('.text_email').val() == "")
                     {

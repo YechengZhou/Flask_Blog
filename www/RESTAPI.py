@@ -13,6 +13,8 @@ import logging
 import uuid
 from www.models import User, Blog, Comment
 
+import smtplib
+
 """
 if 'app' in locals().keys():
     logging.info("app already exits")
@@ -106,34 +108,33 @@ class AddComments(Resource):  # todo
     add comments to blog
     """
     def post(self):
-        #print "add comments called"
-        #print request.form
         user_url = ""
-        if not (request.form['url'].__contains__("http://") or request.form['url'].__contains__("https://")):
-            user_url = "http://" + request.form['url']
-        else:
-            user_url = request.form['url']
-
-        this_content = request.form["content"].strip()
-        temp_dict = {}
-        for i in (" ", "\t", "\n"):
-            find_result_tmp = this_content.find(i)
-            if find_result_tmp != -1:
-                temp_dict[i] = find_result_tmp
-         # 按value 排序
-        first_space,x = sorted(temp_dict.items(), key=lambda temp_dict:temp_dict[1])[0]
-        print first_space
-        print "this_content", this_content
-        #if len(this_content) != 0:
-        try:
-            if this_content[0] == "@":
-                # get the author he want to reply
-                reply_author = this_content[1:first_space]
+        if len(request.form['url']) != 0:
+            if not (request.form['url'].__contains__("http://") or request.form['url'].__contains__("https://")):
+                user_url = "http://" + request.form['url']
             else:
-                reply_author = this_content[1:]
-                print "reply: ",reply_author
-        except:
-            pass
+                user_url = request.form['url']
+
+        this_content = request.form["content"]
+        if this_content[0] == "@":  # 此评论为回复评论
+            temp_dict = {}
+            for i in (" ", "\t", "\n"):  # 分离评论回复内容和回复人
+                find_result_tmp = this_content.find(i)
+                if find_result_tmp != -1:
+                    temp_dict[i] = find_result_tmp
+            if len(temp_dict) != 0:
+                # 按value 排序，得到第一个空白符的位置
+                x, first_space = sorted(temp_dict.items(), key=lambda temp_dict:temp_dict[1])[0]
+                if first_space:
+                    # get the author he want to reply
+                    reply_author = this_content[1:first_space]
+                else:
+                    reply_author = this_content[1:]
+                    print "reply: ", reply_author
+
+
+        # send email to replied user TODO
+
 
         comment = Comment(
             blog_id=request.form['blog_id'],
@@ -141,7 +142,7 @@ class AddComments(Resource):  # todo
             user_name=request.form['author'],
             user_email=request.form['email'],
             user_url=user_url,
-            content=request.form["content"],
+            content=this_content,
         )
         comment.insert()
 
