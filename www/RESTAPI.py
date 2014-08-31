@@ -103,7 +103,7 @@ class AddBlog(Resource):
         blog.insert()
 
 
-class AddComments(Resource):  # todo
+class AddComments(Resource):
     """
     add comments to blog
     """
