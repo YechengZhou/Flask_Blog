@@ -30,16 +30,23 @@
                     else{
                         vm.$data['content'] = $('.comment_area').val()
                     }
+
+
+                    $("#submit").removeClass().addClass("btn btn-primary disabled").val("Posting...  ")
+
                     if ( $('.text_author').val() == "" || $('.text_email').val() == "")
                     {
                         alert("Author and Email are required!");
                         return ;
                     }
+
                     postApi(action, this.$data, function (err, r) {
                         if (err) {
+                            $("#submit").removeClass().addClass("btn btn-primary").val("Post Comment")
                             alert('Somethings wrong T.T Please contact ethanchou1126@gmail.com');
                         }
                         else {
+                            $("#submit").removeClass().addClass("btn btn-primary").val("Post Comment")
                             alert('Thanks for your comment!');
                             return location.assign(redirect);
                         }
@@ -93,7 +100,19 @@
 
     {% endif %}
 
-
+    <div class="next_pre">
+        {% if pre_entry%}
+        <div class="left_a">
+            <a href="/blog/{{pre_entry.id}}"><< {{pre_entry.name}}</a>
+        </div>
+        {% endif %}
+        {% if next_entry%}
+        <div class="right_a">
+            <a href="/blog/{{next_entry.id}}">{{next_entry.name}} >></a>
+        </div>
+        {% endif %}
+        <HR style="FILTER: alpha(opacity=100,finishopacity=0,style=2)" width="95%" color=#987cb9 SIZE=15>
+    </div>
   <!-- /.blog-post -->
 
      <!--ul class="pager">
@@ -139,7 +158,8 @@
                 <input v-model="blog_id" type="hidden" name="blog_id" value="{{entry.id}}" >
                 <input type="hidden" name="comment_post_ID" value="1376" id="comment_post_ID">
                 <input type="hidden" name="comment_parent" id="comment_parent" value="0">
-                <input name="submit" type="submit" id="submit" value="Post Comment">
+
+                <input class="btn btn-primary" name="submit" type="submit" id="submit" value="Post Comment"></input>
                 </p>
 
             </form>

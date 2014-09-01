@@ -129,7 +129,20 @@ def show_all_blog():
 
 @app.route('/blog/<string:id>')
 def show_article(id):
-    this_entry = db.select("select * from blogs where id='%s'" % id)[0]
+    all_entries = db.select("select * from blogs order by created_at" )
+    for i in all_entries:
+        if i['id'] == id:
+            this_entry = i
+            this_entry_index = all_entries.index(i)
+            if this_entry_index > 0:
+                pre_entry = all_entries[this_entry_index-1]
+            else:
+                pre_entry = None
+            if this_entry_index < (len(all_entries) -1):
+                next_entry = all_entries[this_entry_index+1]
+            else:
+                next_entry = None
+    #this_entry = db.select("select * from blogs where id='%s'" % id)[0]
     this_entry['created_at'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(this_entry['created_at']))
     this_comments = db.select("select * from comments where blog_id ='%s'" % id)
     if this_comments:
@@ -137,9 +150,9 @@ def show_article(id):
             i.created_at = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i.created_at))
 
     if session.has_key('username'):
-        return render_template('article.html', entry=this_entry, username=session['username'], comments=this_comments)
+        return render_template('article.html', entry=this_entry, username=session['username'], comments=this_comments, pre_entry=pre_entry, next_entry=next_entry)
     else:
-        return render_template('article.html', entry=this_entry, comments=this_comments)
+        return render_template('article.html', entry=this_entry, comments=this_comments, pre_entry=pre_entry, next_entry=next_entry)
 
 
 #@checklogin

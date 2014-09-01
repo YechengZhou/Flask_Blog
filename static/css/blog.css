@@ -221,7 +221,26 @@ color: #000;
 
 }
 
-comment-date{
+.comment-date{
   color:#987cb9;
   float:right;
+}
+
+.next_pre{
+    margin-bottom: 20px;
+}
+
+.left_a{
+  float:left;
+  length: 20px;
+}
+
+.right_a{
+  float:right;
+  length: 20px;
+}
+
+.reply_area{
+    margin-top:10px;
+    margin-bottom: 50px;
 }
