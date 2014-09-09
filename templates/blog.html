@@ -44,10 +44,11 @@
 {% block date_catalog  %}
     <div class="sidebar-module">
 
-            <ol class="list-unstyled" style="text-align:center; margin-left:auto; margin-right:auto;">
+            <ol class="list-unstyled" style="margin-left:5px;">
               <h3>Catalog</h3>
+
               {% for this_cata in catalogs %}
-                <li><a href="this_cata.url">this_cata.date</a></li>
+                <li><h4><a href="{{this_cata.url}}">{{this_cata.date}}  ( {{this_cata.num}} )</a></h4></li>
               {% endfor %}
             </ol>
      </div>
@@ -58,10 +59,10 @@
 {% block tags  %}
     <div class="sidebar-module">
 
-            <ol class="list-unstyled" style="text-align:center; margin-left:auto; margin-right:auto;">
+            <ol class="list-unstyled" style="margin-left:5px;">
               <h3>Tags</h3>
               {% for this_tag in tags %}
-                <li><a href="this_tag.url">this_tag.name</a></li>
+                <li><h4><a href="{{this_tag.url}}">{{this_tag.name}}  ( {{this_tag.num}} )</a></h4></li>
               {% endfor %}
             </ol>
      </div>

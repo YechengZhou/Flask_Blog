@@ -29,6 +29,7 @@ print app.config
 for i in app.config.items():
     logging.info('%s : %s' % (i[0], i[1]))
 
+
 '''
 url design:
 /blog/: display all articles with brief introduction
@@ -38,12 +39,33 @@ url design:
 
 /about/: a introduction of myself
 
-
+/catalog/<datetime(month:201409)>: display blog list for this month
+/tag/<tag_name>: display blog list of corresponding tag
 '''
 
 logging.basicConfig(level=logging.DEBUG)
 from www import RESTAPI
 RESTAPI.add_res(app)
+
+
+# get tags module and catalog module to serve all kinds of pages
+all_blogs = db.select("select * from blogs order by created_at")
+time_list = []
+catalogs = []
+for this_blog in all_blogs:
+    this_blog['created_at'] = time.strftime("%Y%m", time.localtime(this_blog['created_at']))
+    #catalogs.append(db.MyDict(('date','url'),(this_blog['created_at'], "/catalog/" + str(this_blog['created_at']))))
+    time_list.append(this_blog['created_at'])
+time_list = list(set(time_list))
+for this_time in time_list:
+    catalogs.append(db.MyDict(('date', 'url', 'num'),(this_time[0:4]+" - " + this_time[4:], "/catalog/" + str(this_time), 0)))
+
+for this_cata in catalogs:
+    for j in all_blogs:
+        if j['created_at'] == "".join(this_cata.date.split(" - ")):
+            this_cata.num += 1
+
+catalogs.sort(reverse=True)
 
 
 class LoginError(StandardError):
@@ -56,10 +78,12 @@ class LoginError(StandardError):
 
 @app.route('/')
 def index():
+    """
     if session.has_key('login') and session['login'] and session.has_key('email') and session.has_key('password'):
         logging.info('Logged in as %s' % escape(session['email']))
         return redirect('/blog/')
-    return redirect('/login/')
+    """
+    return redirect('/blog/')
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -126,9 +150,9 @@ def show_all_blog():
     for i in entries:
         i['created_at'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i['created_at']))
     if session.has_key('username'):
-        return render_template('blog.html', entries=entries, username=session['username'])
+        return render_template('blog.html', entries=entries, username=session['username'], catalogs=catalogs)
     else:
-        return render_template('blog.html', entries=entries)
+        return render_template('blog.html', entries=entries, catalogs=catalogs)
 
 
 @app.route('/blog/<string:id>')
@@ -139,13 +163,13 @@ def show_article(id):
             this_entry = i
             this_entry_index = all_entries.index(i)
             if this_entry_index > 0:
-                pre_entry = all_entries[this_entry_index-1]
-            else:
-                pre_entry = None
-            if this_entry_index < (len(all_entries) -1):
-                next_entry = all_entries[this_entry_index+1]
+                next_entry = all_entries[this_entry_index-1]
             else:
                 next_entry = None
+            if this_entry_index < (len(all_entries) -1):
+                pre_entry = all_entries[this_entry_index+1]
+            else:
+                pre_entry = None
     #this_entry = db.select("select * from blogs where id='%s'" % id)[0]
     this_entry['created_at'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(this_entry['created_at']))
     this_comments = db.select("select * from comments where blog_id ='%s'" % id)
@@ -154,9 +178,9 @@ def show_article(id):
             i.created_at = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i.created_at))
 
     if session.has_key('username'):
-        return render_template('article.html', entry=this_entry, username=session['username'], comments=this_comments, pre_entry=pre_entry, next_entry=next_entry)
+        return render_template('article.html', entry=this_entry, username=session['username'], comments=this_comments, pre_entry=pre_entry, next_entry=next_entry, catalogs=catalogs)
     else:
-        return render_template('article.html', entry=this_entry, comments=this_comments, pre_entry=pre_entry, next_entry=next_entry)
+        return render_template('article.html', entry=this_entry, comments=this_comments, pre_entry=pre_entry, next_entry=next_entry, catalogs=catalogs)
 
 
 #@checklogin
