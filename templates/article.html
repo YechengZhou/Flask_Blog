@@ -197,3 +197,30 @@
     </div-->
 
 {% endblock %}
+
+{% block date_catalog  %}
+    <div class="sidebar-module">
+
+            <ol class="list-unstyled" style="margin-left:auto; margin-right:auto;">
+              <h4>Catalog</h4>
+              {% for this_cata in catalogs %}
+                <li><a href="this_cata.url">this_cata.date</a></li>
+              {% endfor %}
+            </ol>
+     </div>
+
+{% endblock %}
+
+
+{% block tags  %}
+    <div class="sidebar-module">
+
+            <ol class="list-unstyled" style="margin-left:auto; margin-right:auto;">
+              <h4>Tags</h4>
+              {% for this_tag in tags %}
+                <li><a href="this_tag.url">this_tag.name</a></li>
+              {% endfor %}
+            </ol>
+     </div>
+
+{% endblock %}

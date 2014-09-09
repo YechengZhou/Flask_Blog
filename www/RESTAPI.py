@@ -12,7 +12,7 @@ from db import db
 import logging
 import uuid
 from www.models import User, Blog, Comment
-
+import www.constant as Constant
 import smtplib
 
 """
@@ -30,7 +30,7 @@ else:
 
 class APIError(StandardError):
     def __init__(self, error, data='', message=''):
-        super(APIError,self).__init__(message)
+        super(APIError, self).__init__(message)
         self.error = error
         self.data = data
         self.message = message
@@ -87,15 +87,22 @@ class AddBlog(Resource):
     """
     def post(self):
         #print request.form
+        """
         try:
             print session['name']
         except:
             print 'Add blog has no username'
+        """
+        tag_list = []
+        this_blog_name = request.form['name']
+        for i in Constant.tags:
+            if this_blog_name.lower().find(i) != -1:
+                tag_list.append(i)
 
         blog = Blog(
             user_id='00140408322081006c255e61b634c5a8937be2afc6119f7000',  # TODO
             user_name='Test',
-            user_image='about:blank',
+            tag=";".join(tag_list),
             name=request.form['name'],
             summary=request.form['summary'],
             content=request.form['content'],
@@ -160,7 +167,6 @@ class Register(Resource):
             password=request.form['password'],
             name=request.form['username'],
             image=request.form['image'] if request.form.has_key('image') else "about:blank",
-            #image='about:blank',
             admin=1,
         )
         user.insert()

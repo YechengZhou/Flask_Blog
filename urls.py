@@ -41,6 +41,10 @@ url design:
 
 '''
 
+logging.basicConfig(level=logging.DEBUG)
+from www import RESTAPI
+RESTAPI.add_res(app)
+
 
 class LoginError(StandardError):
     def __init__(self, error, data='', message=''):
@@ -166,7 +170,8 @@ def show_projects():
     last_update_time = db.select('select created_at from projects limit 0,1;')
     all_repositories_info = []
     print last_update_time
-    if int(time.time()) - int(last_update_time[0].created_at) < 3600 * 12:  # do not update within 12 hours
+
+    if len(last_update_time) != 0 and int(time.time()) - int(last_update_time[0].created_at) < 3600 * 12:  # do not update within 12 hours
         all_repositories_info = db.select('select * from projects')
     else:
         all_rep = git_api_query(url)
@@ -180,6 +185,8 @@ def show_projects():
                     this_rep['html_url'] = i_result['html_url']
                     this_rep['description'] = i_result['description']
                     all_repositories_info.append(this_rep)
+        #if len(last_update_time) == 0: # no project items currently, just insert what have got
+            #flag_just_insert = True
         # update project schema based on new query result from Github api
         all_repo_name_db = db.select('select name from projects;')
 
@@ -234,8 +241,5 @@ def about():
         return render_template('about.html')
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    from www import RESTAPI
 
-    RESTAPI.add_res(app)
     app.run(port=9999)

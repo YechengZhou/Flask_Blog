@@ -5,7 +5,7 @@ from sgmllib import SGMLParser
 import urllib2, urllib
 import logging
 from db import db
-import re
+import constant as Constant
 import time
 
 if db.engine:
@@ -171,8 +171,6 @@ class cnblog_getter(object):
                 # get blog content
                 this_content_getter = blog_content_getter()
                 this_content_getter.feed(content)
-                # get blog tags
-
 
                 if this_content_getter.blog_content and this_post_time:
                     self.blog_contents[blog_name] = this_content_getter.blog_content
@@ -186,15 +184,11 @@ def time_converter():
 if __name__ == "__main__":
 
     # test tag getter
-
+    logging.basicConfig(level=logging.INFO)
     ###########
     xx = cnblog_getter()
     xx.get_blog_content()
     print len(xx.blog_contents.keys())
-    #print xx.blog_contents
-    for i in xx.blog_contents.keys():
-        if i.__contains__("Perl"):
-            print xx.blog_contents[i]
     """
     for k in xx.blog_contents:
         form_data = {
@@ -215,14 +209,36 @@ if __name__ == "__main__":
     from www.models import Blog
     import re
 
+    existing_blogs = db.select("select * from blogs;")
+
     for k in xx.blog_contents.keys():
-        blog = Blog(
-            user_id='00140408322081006c255e61b634c5a8937be2afc6119f7000',  # TODO
-            user_name='Test',
-            user_image='about:blank',
-            name=k,
-            summary=re.sub(r"<.*?>","",xx.blog_contents[k])[0:100],
-            content=xx.blog_contents[k],
-            created_at=xx.blog_post_time[k],
-            )
-        blog.insert()
+        exists_flag = False
+        for this_blog in existing_blogs:
+            if k.decode('utf-8') == this_blog['name']:
+                exists_flag = True
+                break
+        if exists_flag == False:
+            tag_list = []
+            this_blog_name = k
+            for i in Constant.tags:
+                if this_blog_name.lower().find(i) != -1:
+                    tag_list.append(i)
+            blog = Blog(
+                user_id='00140408322081006c255e61b634c5a8937be2afc6119f7000',  # TODO
+                user_name='Test',
+                tags=";".join(tag_list),
+                name=k,
+                summary=re.sub(r"<.*?>","",xx.blog_contents[k])[0:100],
+                content=xx.blog_contents[k],
+                created_at=xx.blog_post_time[k],
+                )
+            blog.insert()
+        else: # compare post date and decide if need to update
+            if xx.blog_post_time[k] != this_blog['created_at']:
+                # update
+                db.update("update blogs set summary=%s, content=%s, create_at=%f" % (re.sub(r"<.*?>","",xx.blog_contents[k])[0:100], xx.blog_contents[k], xx.blog_post_time[k]))
+                logging.debug("update blog item successfully, blog_name : %s " % k)
+            else:
+                logging.debug("blog_name : %s  don't need to be updated" % k)
+
+

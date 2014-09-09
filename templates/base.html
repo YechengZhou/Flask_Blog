@@ -94,26 +94,27 @@
 
 
               <div style="text-align:center; margin-left:auto; margin-right:auto;">
-                  <img class="img-circle" src="https://raw.githubusercontent.com/YechengZhou/Flask_Blog/master/static/avatar.jpg" alt="Generic placeholder image" style="width: 140px; height: 140px; margin-top:20px; margin-bottom:20px; margin-right:auto; margin-left:auto;">
+                  <img class="img-circle" src="{{ url_for('static', filename='avatar.jpg')}}"alt="Generic placeholder image" style="width: 140px; height: 140px; margin-top:20px; margin-bottom:20px; margin-right:auto; margin-left:auto;">
                   <h2>Yecheng Zhou</h2>
-                  <p>This is my tiny website to record some of mine</p>
+                  <p>"Your prison is walking through this world all alone" -- Desperado</p>
+                  <ol class="list-unstyled" style="text-align:center; margin-left:auto; margin-right:auto;">
+              <a href="https://github.com/YechengZhou"><image src="{{ url_for('static', filename='github.png')}}" style="width:20px;height:20px;" ></image></a>
+              <a href="http://www.weibo.com/yecheng1126"><image src="{{ url_for('static', filename='weibo.png')}}" style="width:20px;height:20px;" ></image></a>
+              <a href="http://instagram.com/zycethan"><image src="{{ url_for('static', filename='instagram.png')}}" style="width:20px;height:20px;" ></image></a>
+              <a href="http://cn.linkedin.com/pub/yecheng-zhou/65/b60/455"><image src="{{ url_for('static', filename='linkedin.png')}}" style="width:20px;height:20px;" ></image></a>
+               </ol>
                   <p><a class="btn btn-default" href="/about/" >View details &raquo;</a></p>
               </div>
+
 
            </div>
 
           <div class="sidebar-module">
 
-            <ol class="list-unstyled" style="text-align:center; margin-left:auto; margin-right:auto;">
-              <h4>Social</h4>
-              <li><a href="https://github.com/YechengZhou">GitHub</a></li>
-              <li><a href="http://www.weibo.com/yecheng1126">Weibo</a></li>
-              <li><a href="http://instagram.com/zycethan">Instagram</a></li>
-              <li><a href="http://cn.linkedin.com/pub/yecheng-zhou/65/b60/455">Linkedin</a></li>
-            </ol>
-          </div>
 
-          {% block other_blog  %}{% endblock %}
+          </div>
+          {% block date_catalog  %}{% endblock %}
+          {% block tags  %}{% endblock %}
         </div><!-- /.blog-sidebar -->
 
       </div><!-- /.row -->
