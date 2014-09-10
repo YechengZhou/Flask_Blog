@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block title %}
        <div class="blog-header">
-        <h1 class="blog-title"></h1>
+        <!--h1 class="blog-title"></h1-->
+        <h1 class="page-header" style="margin-bottom:30px;">{{datetime}}</h1>
         <!--p class="lead blog-description">Record my stuffs</p-->
       </div>
 {% endblock %}
@@ -19,6 +20,7 @@
       </dl>
     </form>
   {% endif %} <!-->
+
   {% for entry in entries %}
 
      <div class="blog-post">
@@ -37,6 +39,7 @@
      </div>
   {% endfor %}
 {% endblock %}
+
 
 
 

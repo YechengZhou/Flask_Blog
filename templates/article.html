@@ -65,7 +65,7 @@
 {% block title %}
       <div class="blog-header">
         <h3 class="blog-title">{{ entry.name }}</h3>
-        <p class="blog-post-meta">posted at: {{ entry.created_at }} </p>
+        <p class="blog-post-meta">posted at: {{ entry.created_at_converted }} </p>
       </div>
 {% endblock %}
 
@@ -198,30 +198,3 @@
 
 {% endblock %}
 
-{% block date_catalog  %}
-    <div class="sidebar-module">
-
-            <ol class="list-unstyled" style="margin-left:5px;">
-              <h3>Catalog</h3>
-
-              {% for this_cata in catalogs %}
-                <li><h4><a href="{{this_cata.url}}">{{this_cata.date}}  ( {{this_cata.num}} )</a></h4></li>
-              {% endfor %}
-            </ol>
-     </div>
-
-{% endblock %}
-
-
-{% block tags  %}
-    <div class="sidebar-module">
-
-            <ol class="list-unstyled" style="margin-left:5px;">
-              <h3>Tags</h3>
-              {% for this_tag in tags %}
-                <li><h4><a href="{{this_tag.url}}">{{this_tag.name}}  ( {{this_tag.num}} )</a></h4></li>
-              {% endfor %}
-            </ol>
-     </div>
-
-{% endblock %}

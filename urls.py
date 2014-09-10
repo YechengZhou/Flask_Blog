@@ -53,16 +53,16 @@ all_blogs = db.select("select * from blogs order by created_at")
 time_list = []
 catalogs = []
 for this_blog in all_blogs:
-    this_blog['created_at'] = time.strftime("%Y%m", time.localtime(this_blog['created_at']))
+    this_blog['created_at_short'] = time.strftime("%Y%m", time.localtime(this_blog['created_at']))
     #catalogs.append(db.MyDict(('date','url'),(this_blog['created_at'], "/catalog/" + str(this_blog['created_at']))))
-    time_list.append(this_blog['created_at'])
+    time_list.append(this_blog['created_at_short'])
 time_list = list(set(time_list))
 for this_time in time_list:
-    catalogs.append(db.MyDict(('date', 'url', 'num'),(this_time[0:4]+" - " + this_time[4:], "/catalog/" + str(this_time), 0)))
+    catalogs.append(db.MyDict(('date', 'url', 'num', 'short_date' ),(this_time[0:4]+u' 年 ' + this_time[4:] + u' 月', "/catalog/" + str(this_time), 0, this_time)))
 
 for this_cata in catalogs:
     for j in all_blogs:
-        if j['created_at'] == "".join(this_cata.date.split(" - ")):
+        if j['created_at_short'] == this_cata.short_date:
             this_cata.num += 1
 
 catalogs.sort(reverse=True)
@@ -148,7 +148,7 @@ def home():
 def show_all_blog():
     entries = db.select('select * from blogs order by created_at DESC')
     for i in entries:
-        i['created_at'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i['created_at']))
+        i['created_at_converted'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i['created_at']))
     if session.has_key('username'):
         return render_template('blog.html', entries=entries, username=session['username'], catalogs=catalogs)
     else:
@@ -171,17 +171,26 @@ def show_article(id):
             else:
                 pre_entry = None
     #this_entry = db.select("select * from blogs where id='%s'" % id)[0]
-    this_entry['created_at'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(this_entry['created_at']))
+    this_entry['created_at_converted'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(this_entry['created_at']))
     this_comments = db.select("select * from comments where blog_id ='%s'" % id)
     if this_comments:
         for i in this_comments:
-            i.created_at = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i.created_at))
+            i.created_at_converted = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i.created_at))
 
     if session.has_key('username'):
         return render_template('article.html', entry=this_entry, username=session['username'], comments=this_comments, pre_entry=pre_entry, next_entry=next_entry, catalogs=catalogs)
     else:
         return render_template('article.html', entry=this_entry, comments=this_comments, pre_entry=pre_entry, next_entry=next_entry, catalogs=catalogs)
 
+
+@app.route('/catalog/<string:date>')
+def show_catalog(date):
+    cata_blogs = []
+    for this_blog in all_blogs:
+        this_blog['created_at_converted'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(this_blog['created_at']))
+        if str(this_blog['created_at_short']) == date:
+            cata_blogs.append(this_blog)
+    return render_template('catalog.html', entries=cata_blogs, catalogs=catalogs, datetime=date[:4] + u' 年 ' + date[4:] + u' 月')
 
 #@checklogin
 @app.route('/projects/')
