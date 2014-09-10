@@ -99,7 +99,7 @@
 
               <div style="text-align:center; margin-left:auto; margin-right:auto;">
                   <img class="img-circle" src="{{ url_for('static', filename='avatar.jpg')}}"alt="Generic placeholder image" style="width: 140px; height: 140px; margin-top:20px; margin-bottom:20px; margin-right:auto; margin-left:auto;">
-                  <h2>Yecheng Zhou</h2>
+                  <h2>周也程 Yecheng Zhou</h2>
                   <p>"Your prison is walking through this world all alone" -- Desperado</p>
                   <ol class="list-unstyled" style="text-align:center; margin-left:auto; margin-right:auto;">
               <a href="https://github.com/YechengZhou"><image src="{{ url_for('static', filename='github.png')}}" style="width:20px;height:20px;" ></image></a>
@@ -121,7 +121,7 @@
             <div class="sidebar-module">
 
                     <ol class="list-unstyled" style="margin-left:5px;">
-                      <h3>Catalog</h3>
+                      <h3 class="page-header">时间</h3>
 
                       {% for this_cata in catalogs %}
                         <li><h4>{{this_cata.date}}  ( <a href="{{this_cata.url}}">{{this_cata.num}}</a> )</h4></li>
@@ -134,7 +134,7 @@
             <div class="sidebar-module">
 
                     <ol class="list-unstyled" style="margin-left:5px;">
-                      <h3>Tags</h3>
+                      <h3 class="page-header">标签</h3>
                       {% for this_tag in tags %}
                         <li><h4><a href="{{this_tag.url}}">{{this_tag.name}}  ( {{this_tag.num}} )</a></h4></li>
                       {% endfor %}
