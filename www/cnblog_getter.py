@@ -217,7 +217,7 @@ if __name__ == "__main__":
             if k.decode('utf-8') == this_blog['name']:
                 exists_flag = True
                 break
-        if exists_flag == False:
+        if not exists_flag:
             tag_list = []
             this_blog_name = k
             for i in Constant.tags:
@@ -226,7 +226,7 @@ if __name__ == "__main__":
             blog = Blog(
                 user_id='00140408322081006c255e61b634c5a8937be2afc6119f7000',  # TODO
                 user_name='Test',
-                tags=";".join(tag_list),
+                tag=";".join(tag_list),
                 name=k,
                 summary=re.sub(r"<.*?>","",xx.blog_contents[k])[0:100],
                 content=xx.blog_contents[k],

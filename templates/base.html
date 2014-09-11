@@ -8,12 +8,14 @@
     <meta name="author" content="">
     <!--link rel="icon" href="{{ url_for('static', filename='favicon.ico')}}"-->
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico')}}">
-
-    <title>Yecheng's Blog</title>
-
+    {% if title %}
+        <title>{{title}}</title>
+    {% else%}
+        <title>Yecheng Zhou's Blog</title>
+    {% endif %}
     <!-- Bootstrap core CSS -->
     <!--link href="/static/css/bootstrap.min.css" rel="stylesheet"-->
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}?12" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/blog.css') }}?opsasasa" rel="stylesheet">
@@ -121,7 +123,7 @@
             <div class="sidebar-module">
 
                     <ol class="list-unstyled" style="margin-left:5px;">
-                      <h3 class="page-header">时间</h3>
+                      <h3 class="page-header"><span class="glyphicon glyphicon-calendar"></span> 文章归档</h3>
 
                       {% for this_cata in catalogs %}
                         <li><h4>{{this_cata.date}}  ( <a href="{{this_cata.url}}">{{this_cata.num}}</a> )</h4></li>
@@ -134,9 +136,9 @@
             <div class="sidebar-module">
 
                     <ol class="list-unstyled" style="margin-left:5px;">
-                      <h3 class="page-header">标签</h3>
+                      <h3 class="page-header"><span class="glyphicon glyphicon-tags"></span> 标签</h3>
                       {% for this_tag in tags %}
-                        <li><h4><a href="{{this_tag.url}}">{{this_tag.name}}  ( {{this_tag.num}} )</a></h4></li>
+                        <a href="{{this_tag.url}}" ><span class="label label-info"> {{this_tag.name}}</span></a>
                       {% endfor %}
                     </ol>
              </div>

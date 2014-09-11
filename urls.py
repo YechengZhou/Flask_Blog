@@ -50,13 +50,20 @@ RESTAPI.add_res(app)
 
 # get tags module and catalog module to serve all kinds of pages
 all_blogs = db.select("select * from blogs order by created_at")
+# catalog
 time_list = []
 catalogs = []
+tag_list = []
+tags = []
 for this_blog in all_blogs:
+    #catalog
     this_blog['created_at_short'] = time.strftime("%Y%m", time.localtime(this_blog['created_at']))
-    #catalogs.append(db.MyDict(('date','url'),(this_blog['created_at'], "/catalog/" + str(this_blog['created_at']))))
     time_list.append(this_blog['created_at_short'])
+    #tag
+    tag_list.extend(this_blog['tag'].split(";"))
+
 time_list = list(set(time_list))
+
 for this_time in time_list:
     catalogs.append(db.MyDict(('date', 'url', 'num', 'short_date' ),(this_time[0:4]+u' 年 ' + this_time[4:] + u' 月', "/catalog/" + str(this_time), 0, this_time)))
 
@@ -66,6 +73,15 @@ for this_cata in catalogs:
             this_cata.num += 1
 
 catalogs.sort(reverse=True)
+while True:
+    try:
+        tag_list.remove("")
+    except ValueError:
+        break
+
+tag_list = list(set(tag_list))
+for this_tag in tag_list:
+    tags.append(db.MyDict(('name', 'url'),(this_tag,"/tag/" + this_tag)))
 
 
 class LoginError(StandardError):
@@ -150,9 +166,9 @@ def show_all_blog():
     for i in entries:
         i['created_at_converted'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i['created_at']))
     if session.has_key('username'):
-        return render_template('blog.html', entries=entries, username=session['username'], catalogs=catalogs)
+        return render_template('blog.html', entries=entries, username=session['username'], catalogs=catalogs, tags=tags, title="Yecheng Zhou's Blog")
     else:
-        return render_template('blog.html', entries=entries, catalogs=catalogs)
+        return render_template('blog.html', entries=entries, catalogs=catalogs, tags=tags, title="Yecheng Zhou's Blog")
 
 
 @app.route('/blog/<string:id>')
@@ -178,9 +194,9 @@ def show_article(id):
             i.created_at_converted = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i.created_at))
 
     if session.has_key('username'):
-        return render_template('article.html', entry=this_entry, username=session['username'], comments=this_comments, pre_entry=pre_entry, next_entry=next_entry, catalogs=catalogs)
+        return render_template('article.html', entry=this_entry, username=session['username'], comments=this_comments, pre_entry=pre_entry, next_entry=next_entry, catalogs=catalogs, tags=tags, title=this_entry.name)
     else:
-        return render_template('article.html', entry=this_entry, comments=this_comments, pre_entry=pre_entry, next_entry=next_entry, catalogs=catalogs)
+        return render_template('article.html', entry=this_entry, comments=this_comments, pre_entry=pre_entry, next_entry=next_entry, catalogs=catalogs, tags=tags, title=this_entry.name)
 
 
 @app.route('/catalog/<string:date>')
@@ -190,9 +206,19 @@ def show_catalog(date):
         this_blog['created_at_converted'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(this_blog['created_at']))
         if str(this_blog['created_at_short']) == date:
             cata_blogs.append(this_blog)
-    return render_template('catalog.html', entries=cata_blogs, catalogs=catalogs, datetime=date[:4] + u' 年 ' + date[4:] + u' 月')
+    return render_template('catalog.html', entries=cata_blogs, catalogs=catalogs, tags=tags, datetime=date[:4] + u' 年 ' + date[4:] + u' 月', title=u'文件归档－' + date[:4] + u' 年 ' + date[4:] + u' 月')
 
-#@checklogin
+
+@app.route('/tag/<string:tag>')
+def show_tag(tag):
+    tag_blogs = []
+    for this_blog in all_blogs:
+        this_blog['created_at_converted'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(this_blog['created_at']))
+        if this_blog['tag'].find(tag) != -1:
+            tag_blogs.append(this_blog)
+    return render_template('tag.html', entries=tag_blogs, catalogs=catalogs, tags=tags, tag_name=tag, title=u'标签－' + tag)
+
+
 @app.route('/projects/')
 def show_projects():
     """
@@ -236,9 +262,9 @@ def show_projects():
 
     if session.has_key('username'):
         #dir(all_repositories_info[0])
-        return render_template('projects.html', projects=all_repositories_info, username=session['username'])
+        return render_template('projects.html', projects=all_repositories_info, username=session['username'], title='Projects')
     else:
-        return render_template('projects.html', projects=all_repositories_info)
+        return render_template('projects.html', projects=all_repositories_info, title='Projects')
 
     #print glob_username
     #return render_template('projects.html', projects=all_repositories_info, username=glob_username)
@@ -269,9 +295,9 @@ def create_blog():
 @app.route('/about/')
 def about():
     if session.has_key('username'):
-        return render_template('about.html', username=session['username'])
+        return render_template('about.html', username=session['username'], title='About Me')
     else:
-        return render_template('about.html')
+        return render_template('about.html', title='About Me')
 
 if __name__ == '__main__':
 
