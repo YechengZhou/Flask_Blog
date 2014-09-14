@@ -111,8 +111,8 @@
             <a href="/blog/{{next_entry.id}}">{{next_entry.name}} >></a>
         </div>
         {% endif %}
-        <HR style="FILTER: alpha(opacity=100,finishopacity=0,style=2)" width="95%" color=#987cb9 SIZE=15>
     </div>
+        <HR style="FILTER: alpha(opacity=100,finishopacity=0,style=2); float:left;" width="95%" color=#987cb9 SIZE=15>
   <!-- /.blog-post -->
 
      <!--ul class="pager">
@@ -126,7 +126,7 @@
         <div class="comment_single_block">
             <div class="comment-prompt">
                 <span class="comment-username"><a href="{{comment.user_url}}">{{comment.user_name}}</a></span> posted at
-                <span class="comment-date">{{comment.created_at}}</span>：
+                <span class="comment-date">{{comment.created_at_converted}}</span>：
             </div>
             <div class="comment-content">
                 {{comment.content}}
