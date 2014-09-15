@@ -15,10 +15,10 @@
     {% endif %}
     <!-- Bootstrap core CSS -->
     <!--link href="/static/css/bootstrap.min.css" rel="stylesheet"-->
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}?12" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='css/blog.css') }}?2" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/blog.css') }}?opsasasa" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="http://v3.bootcss.com/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -164,8 +164,7 @@
       <p>Powered by :
       <a href="http://getbootstrap.com">Bootstrap</a>
       <a href="http://vuejs.org/">Vue.js</a>
-      <a href="http://flask.pocoo.org/">Flask</a>
-      <a href="https://swiftype.com/">Swiftype</a></p>
+      <a href="http://flask.pocoo.org/">Flask</a> </p>
       <p>
         <a href="#">Back to top</a>
       </p>
